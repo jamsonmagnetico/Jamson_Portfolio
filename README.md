@@ -14,3 +14,6 @@ Methodology:
 1. Source of data: (https://drive.google.com/drive/folders/1-4tpBwskc6mHoacMJrkc6hWHIXkusfOH)https://drive.google.com/drive/folders/1-4tpBwskc6mHoacMJrkc6hWHIXkusfOH)
 2. Sql program: PostgreSQlL
 3. Visualization tool: Tableau (https://public.tableau.com/app/profile/jamson5079/viz/BulacanCovid-19Dashboard/Dashboard1)
+
+![image](https://github.com/jamsonmagnetico/Portfolio-1/assets/134472478/086c4b1c-cbf4-441a-8f5e-c431867ed326)
+
