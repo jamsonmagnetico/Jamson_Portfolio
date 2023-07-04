@@ -1,116 +1,119 @@
-#Create Table for CSV file
+#Create Table from CSV file
+#Uploaded using import tool in Postgre SQL
 
-Create table Ph_Covid_data(
-	CaseCode varchar,
-	Age varchar,
-	AgeGroup varchar,
-	Sex varchar,
-	DateSpecimen varchar,
-	DateResultRelease varchar,
-	DateRepConf varchar,
-	DateDied varchar,
-	DateRecover varchar,
-	RemovalType varchar,
-	Admitted varchar,
-	RegionRes varchar,
-	ProvRes varchar,
-	CityMunRes varchar,
-	CityMuniPSGC varchar,
-	BarangayRes varchar,
-	BarangayPSGC varchar,
-	HealthStatus varchar,
-	Quarantined varchar,
-	DateOnset varchar,
-	Pregnanttab varchar,
-	ValidationStatus varchar
+CREATE TABLE Ph_Covid_data(
+	CaseCode VARCHAR,
+	Age VARCHAR,
+	AgeGroup VARCHAR,
+	Sex VARCHAR,
+	DateSpecimen VARCHAR,
+	DateResultRelease VARCHAR,
+	DateRepConf VARCHAR,
+	DateDied VARCHAR,
+	DateRecover VARCHAR,
+	RemovalType VARCHAR,
+	Admitted VARCHAR,
+	RegionRes VARCHAR,
+	ProvRes VARCHAR,
+	CityMunRes VARCHAR,
+	CityMuniPSGC VARCHAR,
+	BarangayRes VARCHAR,
+	BarangayPSGC VARCHAR,
+	HealthStatus VARCHAR,
+	Quarantined VARCHAR,
+	DateOnset VARCHAR,
+	Pregnanttab VARCHAR,
+	ValidationStatus VARCHAR
 )
 
 
 
---Covid-19 infection count per province
+#Covid-19 infection count per province
 
-select
-	distinct provres,
-	count (healthstatus) over (partition by provres order by provres) infection_count_per_province
-from Ph_Covid_data
-where healthstatus is not null and provres is not null
-order by infection_count_per_province desc
+SELECT
+	DISTINCT provres,
+	COUNT (healthstatus) OVER (PARTITION BY provres ORDER BY provres) infection_count_per_province
+FROM Ph_Covid_data
+WHERE healthstatus IS NOT NULL AND provres IS NOT NULL
+ORDER BY infection_count_per_province DESC
 
 --Covid-19 recovery count per province
 
-select
-	distinct provres,
-	count (healthstatus) over (partition by provres order by provres) recovery_count_per_province
-from Ph_Covid_data
-where healthstatus = 'RECOVERED' and provres is not null
-order by recovery_count_per_province desc
+SELECT
+	DISTINCT provres,
+	COUNT (healthstatus) OVER (PARTITION BY provres ORDER BY provres) recovery_count_per_province
+FROM Ph_Covid_data
+WHERE healthstatus = 'RECOVERED' AND provres IS NOT NULL
+ORDER BY recovery_count_per_province DESC
 
 
 --Covid-19 death count per province
 
-select
-	distinct provres,
-	count (healthstatus) over (partition by provres order by provres) death_count_per_province
-from Ph_Covid_data
-where healthstatus = 'DIED' and provres is not null
-order by death_count_per_province desc
+SELECT
+	DISTINCT provres,
+	COUNT (healthstatus) OVER (PARTITION BY provres ORDER BY provres) death_count_per_province
+FROM Ph_Covid_data
+WHERE healthstatus = 'DIED' AND provres IS NOT NULL
+ORDER BY death_count_per_province DESC
 
 
 --Health status on Bulacan Province
 
-select 
-	healthstatus as Health_Status_Bulacan,
-	count (healthstatus) as Quantity
-from Ph_Covid_data
-where provres = 'BULACAN'
-group by healthstatus 
-order by quantity desc
+SELECT 
+	healthstatus AS Health_Status_Bulacan,
+	COUNT (healthstatus) AS Quantity
+FROM Ph_Covid_data
+WHERE provres = 'BULACAN'
+GROUP BY healthstatus 
+ORDER BY quantity DESC
 
 --Age group breakdown of infected individuals at bulacan
-select
-	distinct agegroup as agegroup_affected_bulacan,
-	count (agegroup) over (partition by agegroup order by agegroup) count_per_group
-from Ph_Covid_data
-where provres = 'BULACAN' and agegroup is not null
-order by agegroup
+	
+SELECT
+	DISTINCT agegroup AS agegroup_affected_bulacan,
+	COUNT (agegroup) OVER (PARTITION BY agegroup ORDER BY agegroup) count_per_group
+FROM Ph_Covid_data
+WHERE provres = 'BULACAN' AND agegroup IS NOT NULL
+ORDER BY agegroup
 
 
 --Breakdown of covid-19 deaths in Bulacan (Municipality order)
-select
-	distinct citymunres,
-	count (healthstatus) over (partition by citymunres order by citymunres) death_count_per_municipality
-from Ph_Covid_data
-where healthstatus = 'DIED' and provres = 'BULACAN'
-order by death_count_per_municipality desc
+	
+SELECT
+	DISTINCT citymunres,
+	COUNT (healthstatus) OVER (PARTITION BY citymunres ORDER BY citymunres) death_count_per_municipality
+FROM Ph_Covid_data
+WHERE healthstatus = 'DIED' AND provres = 'BULACAN'
+ORDER BY death_count_per_municipality DESC
 
 
 --Breakdown of infected people in Bulacan (Municipality order)
-select
-	distinct citymunres,
-	count (healthstatus) over (partition by citymunres order by citymunres) infected_count_per_municipality
-from Ph_Covid_data
-where provres = 'BULACAN' and citymunres is not null
-order by infected_count_per_municipality desc
+	
+SELECT
+	DISTINCT citymunres,
+	COUNT (healthstatus) OVER (PARTITION BY citymunres ORDER BY citymunres) infected_count_per_municipality
+FROM Ph_Covid_data
+WHERE provres = 'BULACAN' AND citymunres IS NOT NULL
+ORDER BY infected_count_per_municipality DESC
 
-select*
-from Ph_Covid_data
-
-
+	
 --Breakdown of covid-19 recovery in Bulacan (Municipality order)
-select
-	distinct citymunres as bulacan_municipalities,
-	count (healthstatus) over (partition by citymunres order by citymunres) recovery_count_per_municipality
-from Ph_Covid_data
-where healthstatus = 'RECOVERED' and provres = 'BULACAN' and citymunres is not null
-order by recovery_count_per_municipality desc
+	
+SELECT
+	DISTINCT citymunres AS bulacan_municipalities,
+	COUNT (healthstatus) OVER (PARTITION BY citymunres ORDER BY citymunres) recovery_count_per_municipality
+FROM Ph_Covid_data
+WHERE healthstatus = 'RECOVERED' AND provres = 'BULACAN' AND citymunres IS NOT NULL
+ORDER BY recovery_count_per_municipality DESC
 
 --Progression of Covid-19 per month since 2020
-select
+	
+SELECT
 	provres,
-	cast (datespecimen as date),
-	count (datespecimen) over (partition by datespecimen order by datespecimen)number_of_cases
-from Ph_Covid_data
-where provres = 'BULACAN'
+	CAST (datespecimen AS date),
+	COUNT (datespecimen) OVER (PARTITION BY datespecimen ORDER BY datespecimen)number_of_cases
+FROM Ph_Covid_data
+WHERE provres = 'BULACAN'
 
 
 
